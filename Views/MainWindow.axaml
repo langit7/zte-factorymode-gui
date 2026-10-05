@@ -1,0 +1,72 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ZteModemGui.ViewModels"
+        x:Class="ZteModemGui.Views.MainWindow" x:DataType="vm:MainViewModel"
+        Title="ZTE · Factory Mode" Width="820" Height="820" MinWidth="620" MinHeight="640">
+  <Window.Styles>
+    <Style Selector="TextBox"><Setter Property="MinHeight" Value="34" /></Style>
+    <Style Selector="ComboBox"><Setter Property="HorizontalAlignment" Value="Stretch" /></Style>
+    <Style Selector="TextBlock.label"><Setter Property="Opacity" Value="0.7" /></Style>
+  </Window.Styles>
+  <Grid Margin="24" RowDefinitions="Auto,*,Auto,190,Auto" RowSpacing="12">
+    <StackPanel Spacing="3">
+      <TextBlock Text="ZTE Factory Mode" FontSize="26" FontWeight="SemiBold" />
+      <TextBlock Text="GPON ONT · Telnet and serial control" Classes="label" />
+    </StackPanel>
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Spacing="12" IsEnabled="{Binding !IsBusy}">
+        <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="12">
+          <StackPanel Spacing="4"><TextBlock Text="Modem IPv4" Classes="label" /><TextBox Text="{Binding Host}" /></StackPanel>
+          <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="HTTP port" Classes="label" /><TextBox Text="{Binding HttpPort}" /></StackPanel>
+          <StackPanel Grid.Column="2" Spacing="4"><TextBlock Text="Telnet port" Classes="label" /><TextBox Text="{Binding TelnetPort}" /></StackPanel>
+        </Grid>
+        <Grid ColumnDefinitions="*,*,2*" ColumnSpacing="12">
+          <StackPanel Spacing="4"><TextBlock Text="Service" Classes="label" /><ComboBox ItemsSource="{Binding Services}" SelectedItem="{Binding Service}" /></StackPanel>
+          <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="Action" Classes="label" /><ComboBox ItemsSource="{Binding Actions}" SelectedItem="{Binding Action}" /></StackPanel>
+          <StackPanel Grid.Column="2" Spacing="4"><TextBlock Text="Telnet persistence" Classes="label" /><ComboBox ItemsSource="{Binding PersistenceModes}" SelectedItem="{Binding Persistence}" /></StackPanel>
+        </Grid>
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsEnabled="{Binding !UseKnownCredentials}">
+          <StackPanel Spacing="4"><TextBlock Text="Factory username" Classes="label" /><TextBox Name="FactoryUsernameInput" Text="{Binding FactoryUser}" PlaceholderText="Enter factory username" /></StackPanel>
+          <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="Factory password" Classes="label" /><TextBox Name="FactoryPasswordInput" Text="{Binding FactoryPassword}" PlaceholderText="Enter factory password" /></StackPanel>
+        </Grid>
+        <CheckBox Name="KnownCredentialsCheckbox" Content="Use known usernames/passwords" IsChecked="{Binding UseKnownCredentials}" />
+        <Expander Header="Advanced options" IsExpanded="True">
+          <StackPanel Spacing="10" Margin="0,8,0,0">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+              <StackPanel Spacing="4"><TextBlock Text="Client MAC · optional" Classes="label" /><TextBox Text="{Binding Mac}" PlaceholderText="00:07:29:55:35:57" /></StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="Interface name · optional" Classes="label" /><TextBox Text="{Binding InterfaceName}" PlaceholderText="Ethernet / eth0" /></StackPanel>
+            </Grid>
+            <TextBlock Text="Leave MAC and interface blank for automatic route detection. Use the MAC seen by the modem." TextWrapping="Wrap" Classes="label" FontSize="12" />
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+              <StackPanel Spacing="4"><TextBlock Text="Proof profile" Classes="label" /><ComboBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding Profile}" /></StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="Permanent username" Classes="label" /><TextBox Text="{Binding TelnetUser}" /></StackPanel>
+              <StackPanel Grid.Column="2" Spacing="4"><TextBlock Text="Permanent password" Classes="label" /><TextBox Name="PermanentPasswordInput" Text="{Binding TelnetPassword}" /></StackPanel>
+            </Grid>
+            <WrapPanel>
+              <CheckBox Content="Version61 / time auth" IsChecked="{Binding NewAuth}" Margin="0,0,16,0" />
+              <CheckBox Content="Set region 198" IsChecked="{Binding SetRegion198}" Margin="0,0,16,0" />
+              <CheckBox Content="HTTP diagnostics" IsChecked="{Binding Verbose}" />
+            </WrapPanel>
+          </StackPanel>
+        </Expander>
+      </StackPanel>
+    </ScrollViewer>
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+      <StackPanel Spacing="4"><TextBlock Text="{Binding Status}" TextWrapping="Wrap" /><ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" Height="3" /></StackPanel>
+      <Button Grid.Column="1" Content="Cancel" Command="{Binding RunCancelCommand}" />
+      <Button Grid.Column="2" Content="Run" Command="{Binding RunCommand}" Classes="accent" />
+    </Grid>
+    <Border Grid.Row="3" BorderBrush="#354454" BorderThickness="1" CornerRadius="6" Padding="6">
+      <ListBox ItemsSource="{Binding Logs}" FontFamily="monospace" FontSize="12" />
+    </Border>
+    <StackPanel Grid.Row="4" Spacing="4">
+      <TextBlock Text="{Binding Error}" Foreground="#FF9A9A" TextWrapping="Wrap" />
+      <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+        <TextBlock Text="Telnet user" VerticalAlignment="Center" Classes="label" />
+        <TextBox Grid.Column="1" Text="{Binding ResultUser}" IsReadOnly="True" />
+        <TextBlock Grid.Column="2" Text="Password" VerticalAlignment="Center" Classes="label" />
+        <TextBox Name="ResultPasswordOutput" Grid.Column="3" Text="{Binding ResultPassword}" IsReadOnly="True" />
+      </Grid>
+    </StackPanel>
+  </Grid>
+</Window>
