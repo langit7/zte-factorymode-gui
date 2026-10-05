@@ -22,7 +22,7 @@ GUI compatibility depends on firmware. Hardcode-file decryption is available in 
 
 ## How to use
 
-1. Download your Windows or Linux package from [Releases](https://github.com/langit7/zte-factorymode-gui/releases/latest) and extract it.
+1. Download your Windows or Linux package from [Releases](https://github.com/langit7/zte-modem-tools-gui/releases/latest) and extract it.
 2. Windows: run `ZteModemGui.exe`. Linux: run `chmod +x ZteModemGui` and `./ZteModemGui` in a graphical desktop session. Release packages include .NET.
 3. Enter the modem IPv4 address (default `192.168.1.1`), HTTP port (`80`) and Telnet port (`23`).
 4. Enter the factory username/password, for example `admin` / `admin` if that is your modem's login. Alternatively, check **Use known usernames/passwords**.
